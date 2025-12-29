@@ -1,0 +1,423 @@
+/* Общие настройки */
+body {
+    margin: 0;
+    font-family: 'Old Standard TT', serif;
+    background-color: #1a1a1a; /* Темный фон на всякий случай */
+    color: #ffffff; /* <--- ТЕКСТ БЕЛЫЙ */
+    overflow: hidden;
+    font-size: 20px; 
+}
+
+.main-wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+/* САЙДБАР */
+/* Стили для логотипа в боковом меню */
+/* Стили для логотипа в боковом меню (КРУГЛЫЙ) */
+.sidebar-logo-img {
+    display: block;
+    width: 120px;   /* Ширина круга */
+    height: 120px;  /* Высота должна быть ТАКОЙ ЖЕ, чтобы был круг */
+    margin: 0 auto 20px auto; /* Центрируем */
+    
+    border-radius: 50%; /* <--- ВОТ ЭТО ДЕЛАЕТ КРУГ */
+    object-fit: cover;  /* Картинка заполнит круг, не растягиваясь */
+    border: 3px solid rgba(255, 255, 255, 0.1); /* Можно добавить тонкую рамочку для красоты */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* И небольшую тень */
+}
+
+/* Немного увеличим название флуда в меню */
+.logo {
+    font-size: 28px; /* Было 24px */
+    margin-bottom: 30px; /* Чуть больше отступ до кнопок */
+    /* ...остальные свойства .logo оставь как были... */
+}
+.sidebar {
+    width: 260px;
+    background: #150f17;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    box-shadow: 4px 0 10px rgba(140, 0, 255, 0.148);
+    overflow-y: auto; /* Если меню длинное, его можно скроллить */
+    z-index: 10;
+}
+
+.logo {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(230, 0, 255, 0.1);
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: #bdc3c7;
+    padding: 15px 25px;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+.nav-btn:hover, .nav-btn.active {
+    background: #b300ff15;  /* <--- ВОТ ЭТОТ ЦВЕТ НУЖНО МЕНЯТЬ */
+    color: white;
+    border-left: 5px solid #000000; /* Это фиолетовая полоска слева */
+}
+
+/* КОНТЕНТ */
+.content-area {
+    flex: 1;
+    background: url('assets/bg.jpg') center/cover;
+    position: relative;
+    padding: 40px;
+    overflow-y: auto; 
+}
+
+.content-area::before {
+    content: '';
+    position: fixed; /* Важно: фон зафиксирован */
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: none;
+    z-index: 0;
+}
+
+/* АНИМАЦИЯ СЕКЦИЙ */
+.page-section {
+    position: relative;
+    z-index: 1;
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    max-width: 900px;
+    margin: 0 auto 50px auto; /* Отступ снизу */
+}
+
+.active-section {
+    display: block;
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1, h2 {
+    border-bottom: 2px solid #ffffff; /* Линия подчеркивания теперь белая */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: #ffffff; /* <--- САМ ЗАГОЛОВОК БЕЛЫЙ */
+    text-shadow: 2px 2px 4px #000000; /* Добавим тень, чтобы читалось на любом фоне */
+    text-align: center;
+}
+
+/* --- СТИЛИ ДЛЯ ГАЛЕРЕИ (МЕМЫ) --- */
+.gallery-grid {
+    display: grid;
+    /* Автоматически ставит 2-3 картинки в ряд в зависимости от размера экрана */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* ГАЛЕРЕЯ (МЕМЫ) */
+.gallery-item {
+    background: rgba(42, 16, 60, 0.7); 
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+    border: 1px solid #444; /* Добавили рамочку */
+}
+
+.gallery-item:hover {
+    transform: scale(1.02); /* Чуть увеличивается при наведении */
+}
+
+.gallery-item img, .gallery-item video {
+    width: 100%; /* Картинка растягивается на всю ширину карточки */
+    height: 200px; /* Фиксированная высота */
+    object-fit: cover; /* Обрезает лишнее, чтобы было красиво */
+    border-radius: 5px;
+}
+
+.caption {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    font-style: italic;
+}
+
+/* Остальные стили (интерактивы, ресты и т.д.) */
+/* ИНТЕРАКТИВЫ */
+.interactive-item {
+    display: flex;
+    background: rgba(42, 16, 60, 0.7); /* Был white, стал темный */
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+}
+.interactive-item img { width: 150px; height: 150px; object-fit: cover; 
+/* НОВАЯ СТРОЧКА ДЛЯ ОКРУГЛОСТИ */
+    border-radius: 25px; /* Чем больше число, тем круглее углы */
+    
+    /* (По желанию) Можно добавить отступ, чтобы картинка "отлипла" от левого края карточки */
+    margin: 15px;}
+.interactive-item .desc { padding: 20px; }
+
+/* РЕСТЫ */
+.rest-list li {
+    background: rgba(42, 16, 60, 0.7); /* Был white, стал темный */
+    padding: 15px;
+    margin-bottom: 8px;
+    border-left: 5px solid #9d00ffd0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    border: 1px solid #444;
+}
+
+/* МУЗЫКА */
+.music-card {
+    background: rgba(42, 16, 60, 0.7); /* Был white, стал темный */
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(183, 0, 255, 0.196);
+    border: 1px solid #444;
+}
+/* Песни внутри музыки */
+.song {
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid #555; /* Линия стала темнее */
+    transition: 0.2s;
+}
+
+.song:hover { 
+    color: #9d00ff; 
+    background: rgba(255,255,255,0.05); /* Легкая подсветка при наведении */
+    padding-left: 15px; 
+}
+
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+}
+.role { padding: 15px; text-align: center; border-radius: 5px; font-weight: bold; color: white; }
+.role.taken { background: #7f8c8d; text-decoration: line-through; opacity: 0.7; }
+.role.free { background: #9d00ff51; cursor: pointer; }
+
+/* Стили для логотипа на главной */
+/* Баннер на главной странице */
+.welcome-logo {
+    display: block;
+    width: 100%; /* Ширина на весь блок */
+    height: auto;  /* Высота подстраивается */
+    margin: 30px 0; /* Отступы сверху и снизу */
+    border-radius: 10px; /* Слегка закруглим углы для красоты */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5); /* Добавим тень для объема */
+    
+    /* Анимация появления */
+    opacity: 0; /* Изначально прозрачный */
+    transform: scale(0.95); /* Чуть уменьшен */
+    animation: bannerFadeIn 1s ease-out forwards; /* Запуск анимации */
+    animation-delay: 0.3s; /* Небольшая задержка после появления текста */
+}
+
+/* Сама анимация для баннера */
+@keyframes bannerFadeIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* --- УБИРАЕМ ВИДИМЫЕ ПОЛЗУНКИ --- */
+
+/* Для Chrome, Safari и новых Edge */
+.sidebar::-webkit-scrollbar,
+.content-area::-webkit-scrollbar {
+    display: none; /* Просто скрываем их */
+}
+
+/* Для Firefox */
+.sidebar, .content-area {
+    scrollbar-width: none; /* Убираем ширину скроллбара */
+}
+
+
+
+/* Настройки для гифки в правилах */
+.rules-gif {
+    display: block;
+    max-width: 100%; /* Чтобы не вылезала за пределы экрана на телефоне */
+    width: 400px;    /* Можешь менять это число, чтобы сделать больше/меньше */
+    height: auto;
+    margin: 20px auto 0 auto; /* Отступ сверху 20px, по бокам авто (центр) */
+    border-radius: 8px; /* Слегка скруглим углы */
+    opacity: 0.9; /* Можно сделать чуть прозрачной для стиля (по желанию) */
+
+
+
+
+    /* --- УНИВЕРСАЛЬНЫЕ СТИЛИ ДЛЯ ГИФОК И КАРТИНОК --- */
+
+/* 1. Стандартная (для мемов и реакций) */
+/* Встает по центру, не слишком большая */
+.gif-standard {
+    display: block;
+    max-width: 100%;
+    width: 400px; /* Оптимальный размер */
+    height: auto;
+    margin: 15px auto; /* Отступ сверху/снизу и центр по бокам */
+    border-radius: 8px;
+}
+
+/* 2. Маленькая (для стикеров или иконок) */
+.gif-small {
+    display: block;
+    max-width: 150px; /* Маленький размер */
+    height: auto;
+    margin: 10px auto;
+}
+
+/* 3. На всю ширину (для красивых разделителей или баннеров) */
+.gif-full {
+    display: block;
+    width: 100%; /* Растягивается от края до края */
+    height: auto;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+}
+
+
+
+
+
+
+
+
+/* --- СТИЛЬНЫЙ ПЛЕЕР --- */
+.custom-player {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #555;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    
+    /* --- ВОТ ЭТИ СТРОЧКИ ДЕЛАЮТ ЕГО УЖЕ --- */
+    max-width: 400px; /* Ограничиваем ширину (можно сделать 400px или 600px) */
+    width: 100%;      /* На телефонах он займет всю доступную ширину */
+    margin: 0 auto 30px auto; /* "auto" по бокам выравнивает его ПО ЦЕНТРУ */
+    
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+#track-title {
+    color: #c300ffb3; /*  цвет названия */
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+/* Твой узор-разделитель */
+.player-decoration {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 10px auto 20px auto; /* Отступы */
+    opacity: 0.8;
+}
+
+/* Контейнер прогресса */
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-family: monospace; /* Шрифт как на часах */
+    font-size: 14px;
+    color: #ccc;
+}
+
+/* --- ПОЛЗУНКИ (INPUT RANGE) --- */
+input[type=range] {
+    -webkit-appearance: none; /* Убираем стандартный вид */
+    width: 100%;
+    height: 4px;
+    background: #444; /* Серый фон линии */
+    border-radius: 2px;
+    cursor: pointer;
+    outline: none;
+}
+
+/* Головка ползунка (кружочек) */
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #d63ce76d; /* Красный кружок */
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(230, 0, 255, 0.193); /* Свечение */
+}
+
+/* Кнопки управления */
+.controls {
+    margin-bottom: 15px;
+}
+
+.ctrl-btn {
+    background: none;
+    border: 1px solid #555;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 0 10px;
+    transition: 0.3s;
+}
+
+.ctrl-btn:hover {
+    background: #c800ff;
+    border-color: #c800ff;
+}
+
+.big-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 24px; /* Кнопка плей побольше */
+}
+
+/* Список песен снизу */
+.song-item {
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    cursor: pointer;
+    transition: 0.2s;
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+.song-item:hover {
+    background: rgba(255,255,255,0.1);
+    padding-left: 15px;
+}
+.song-author {
+    color: #c800ff;
+    font-weight: bold;
+}
