@@ -424,60 +424,53 @@ input[type=range]::-webkit-slider-thumb {
 
 
 
-/* --- АДАПТАЦИЯ ПОД ТЕЛЕФОНЫ (MOBILE) --- */
+/* --- АДАПТАЦИЯ ПОД ТЕЛЕФОНЫ (ИСПРАВЛЕННАЯ ВЕРСИЯ 2.0) --- */
+/* Вставь это в САМЫЙ КОНЕЦ style.css */
+
 @media (max-width: 768px) {
     
-    /* 1. Меню переезжает наверх */
+    /* 0. Спасательный круг: запрещаем экрану ездить влево-вправо */
+    body, html {
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+
+    /* 1. Меню переезжает наверх и становится обычным блоком */
     .sidebar {
-        position: relative; /* Перестает быть фиксированным сбоку */
-        width: 100%;       /* Растягивается на всю ширину */
-        height: auto;      /* Высота зависит от содержимого */
+        position: static !important; /* Самое важное: отменяем "прилипание" */
+        width: 100% !important;      /* Растягиваем на всю ширину */
+        height: auto !important;     /* Высота подстраивается под кнопки */
         padding: 20px 0;
         text-align: center;
+        /* Делаем кнопки в ряд, если влезают */
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: center;
     }
 
-    /* 2. Логотип в меню поменьше */
-    .sidebar-logo-img {
-        width: 80px;
-        height: 80px;
-    }
-
-    /* 3. Кнопки меню становятся компактными плитками */
-    .sidebar button {
-        display: inline-block; /* Встают в ряд, а не в столбик */
-        width: auto;          /* Ширина по тексту */
-        margin: 5px;          /* Отступы вокруг */
-        padding: 8px 15px;    /* Размер кнопок */
-        font-size: 14px;      /* Текст поменьше */
-    }
-
-    /* 4. Основной контент растягивается */
+    /* 2. Основной контент (Та самая "недееспособная" часть) */
     .content-area {
-        margin-left: 0;       /* Убираем отступ слева, так как меню теперь сверху */
-        width: 100%;          /* На всю ширину */
-        padding: 15px;        /* Немного отступа от краев экрана */
+        margin-left: 0 !important;  /* ЖЕСТКО убираем отступ слева */
+        width: 100% !important;     /* ЖЕСТКО делаем на всю ширину */
+        padding: 20px !important;   /* Добавляем воздуха по краям */
+        box-sizing: border-box;     /* Чтобы отступы не ломали ширину */
     }
 
-    /* 5. Заголовки поменьше, чтобы влезали */
-    h1 { font-size: 28px; }
-    h2 { font-size: 22px; }
+    /* --- Остальные стили для красоты на телефоне --- */
 
-    /* 6. Интерактивы (картинка сверху, текст снизу) */
-    .interactive-item {
-        flex-direction: column; /* Ставит элементы в столбик */
-        text-align: center;
+    /* Логотип поменьше */
+    .sidebar-logo-img { width: 70px; height: 70px; margin-bottom: 10px; }
+    .logo { font-size: 20px; width: 100%; margin-bottom: 15px;}
+
+    /* Кнопки меню компактнее */
+    .sidebar button {
+        width: auto; margin: 5px; padding: 8px 12px; font-size: 13px;
     }
 
-    .interactive-item img {
-        margin: 0 auto 15px auto; /* Центрируем картинку */
-        width: 80%;               /* Картинка не на весь экран, но крупно */
-        height: auto;
-    }
+    /* Интерактивы в столбик */
+    .interactive-item { flex-direction: column; text-align: center; }
+    .interactive-item img { margin: 0 auto 15px auto; width: 70%; height: auto; border-radius: 15px;}
     
-    /* 7. Плеер и картинки не вылезают за экран */
-    .custom-player, img, .text-block {
-        max-width: 100%;
-        width: 100%;
-        box-sizing: border-box; /* Чтобы рамки не расширяли блок */
-    }
+    /* Плеер и картинки не вылезают */
+    .custom-player, img, .text-block { max-width: 100%; }
 }
