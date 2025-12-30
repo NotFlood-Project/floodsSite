@@ -39,7 +39,7 @@ const playlist = [
         src: "music/song1.mp3" 
     },
     {
-        title: "Блэйд: ...",
+        title: "Миша: Radiohead - Climbing Up The Walls",
         src: "music/song2.mp3" 
     }
     // Можешь добавить еще: { title: "Имя", src: "путь" },
