@@ -474,3 +474,22 @@ input[type=range]::-webkit-slider-thumb {
     /* Плеер и картинки не вылезают */
     .custom-player, img, .text-block { max-width: 100%; }
 }
+
+
+
+
+/* Настройки для чата */
+.chat-container {
+    background: rgba(0, 0, 0, 0.6); /* Темная подложка */
+    border: 1px solid #7b3ce7;      /* Фиолетовая рамка в цвет твоего дизайна */
+    padding: 15px;
+    border-radius: 10px;            /* Закругленные углы */
+    max-width: 600px;               /* Чтобы не был слишком широким */
+    margin: 20px auto;              /* Центрируем по середине экрана */
+    box-shadow: 0 0 15px rgba(123, 60, 231, 0.3); /* Легкое свечение */
+}
+
+/* На всякий случай, чтобы фрейм чата не вылезал */
+.chat-container iframe {
+    width: 100% !important;
+}

@@ -140,3 +140,5 @@ function seekAudio() {
 function setVolume() {
     audio.volume = volumeBar.value;
 }
+
+
