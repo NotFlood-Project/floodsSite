@@ -421,3 +421,63 @@ input[type=range]::-webkit-slider-thumb {
     color: #c800ff;
     font-weight: bold;
 }
+
+
+
+/* --- АДАПТАЦИЯ ПОД ТЕЛЕФОНЫ (MOBILE) --- */
+@media (max-width: 768px) {
+    
+    /* 1. Меню переезжает наверх */
+    .sidebar {
+        position: relative; /* Перестает быть фиксированным сбоку */
+        width: 100%;       /* Растягивается на всю ширину */
+        height: auto;      /* Высота зависит от содержимого */
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    /* 2. Логотип в меню поменьше */
+    .sidebar-logo-img {
+        width: 80px;
+        height: 80px;
+    }
+
+    /* 3. Кнопки меню становятся компактными плитками */
+    .sidebar button {
+        display: inline-block; /* Встают в ряд, а не в столбик */
+        width: auto;          /* Ширина по тексту */
+        margin: 5px;          /* Отступы вокруг */
+        padding: 8px 15px;    /* Размер кнопок */
+        font-size: 14px;      /* Текст поменьше */
+    }
+
+    /* 4. Основной контент растягивается */
+    .content-area {
+        margin-left: 0;       /* Убираем отступ слева, так как меню теперь сверху */
+        width: 100%;          /* На всю ширину */
+        padding: 15px;        /* Немного отступа от краев экрана */
+    }
+
+    /* 5. Заголовки поменьше, чтобы влезали */
+    h1 { font-size: 28px; }
+    h2 { font-size: 22px; }
+
+    /* 6. Интерактивы (картинка сверху, текст снизу) */
+    .interactive-item {
+        flex-direction: column; /* Ставит элементы в столбик */
+        text-align: center;
+    }
+
+    .interactive-item img {
+        margin: 0 auto 15px auto; /* Центрируем картинку */
+        width: 80%;               /* Картинка не на весь экран, но крупно */
+        height: auto;
+    }
+    
+    /* 7. Плеер и картинки не вылезают за экран */
+    .custom-player, img, .text-block {
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box; /* Чтобы рамки не расширяли блок */
+    }
+}
