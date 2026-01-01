@@ -1,4 +1,4 @@
-/* ОБНУЛЕНИЕ И ФОН */
+/* 1. ГЛОБАЛЬНЫЕ НАСТРОЙКИ (КОМПЬЮТЕР) */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -8,22 +8,26 @@
 body {
     font-family: 'Crimson Text', serif;
     color: #e0e0e0;
-    /* ФОН ЗАФИКСИРОВАН И ВСЕГДА НА ВЕСЬ ЭКРАН */
-    background-image: url('assets/background.jpg'); /* Проверь путь к картинке! */
+    
+    /* ФОН: Проверь название файла! У тебя было bg.jpg или background.jpg? */
+    background: url('assets/bg.jpg') no-repeat center center fixed;
     background-size: cover;
-    background-position: center;
-    background-attachment: fixed; /* Магия: фон стоит на месте при скролле */
-    background-repeat: no-repeat;
+    
     min-height: 100vh;
-    overflow-x: hidden; /* Убираем горизонтальную прокрутку */
+    overflow-x: hidden;
 }
 
-/* Главная обертка теперь не мешает скроллу */
+/* ГЛАВНАЯ ОБЕРТКА */
 .main-wrapper {
-    display: flex;
+    display: flex;       /* Включаем режим "Две колонки" */
+    flex-direction: row; /* Слева меню, справа текст */
     width: 100%;
     min-height: 100vh;
-    position: relative;
+}
+
+/* ПРЯЧЕМ КНОПКУ МЕНЮ НА КОМПЬЮТЕРЕ */
+#burger-btn {
+    display: none; /* Это уберет белую кнопку и полосу на ноуте */
 }
 
 /* САЙДБАР */
@@ -421,32 +425,70 @@ input[type=range]::-webkit-slider-thumb {
 
 
 
-/* --- ЕДИНАЯ МОБИЛЬНАЯ ВЕРСИЯ (И для Android, и для iPhone) --- */
+/* --- МОБИЛЬНАЯ ВЕРСИЯ (ТОЛЬКО ТЕЛЕФОНЫ И ПЛАНШЕТЫ) --- */
 @media screen and (max-width: 1024px) { 
-/* Ставим 1024px, чтобы захватить и горизонтальные телефоны, и планшеты */
 
-    /* 1. ПРЕВРАЩАЕМ ВЕРСТКУ В БЛОЧНУЮ */
+    /* 1. Выключаем две колонки, делаем всё в столбик */
     .main-wrapper {
-        display: block; /* Элементы идут друг за другом */
+        display: block; 
     }
 
-    /* 2. НАСТРОЙКА КНОПКИ МЕНЮ */
+    /* 2. Показываем кнопку-гамбургер */
     #burger-btn {
-        display: block !important; /* Всегда показываем кнопку */
+        display: block !important;
         position: fixed;
-        top: 15px;
-        left: 15px;
-        z-index: 2000; /* Поверх всего */
-        background: rgba(123, 60, 231, 0.9); /* Полупрозрачный фиолетовый */
+        top: 20px;
+        left: 20px;
+        z-index: 2000;
+        background: #7b3ce7;
         color: white;
         border: none;
-        font-size: 24px;
-        width: 45px;
-        height: 45px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
+        font-size: 24px;
         cursor: pointer;
-        box-shadow: 0 0 10px rgba(0,0,0,0.8);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
+
+    /* 3. Меню: Скрыто слева */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;       /* Спрятано */
+        width: 280px;      /* Ширина шторки */
+        height: 100vh;
+        z-index: 1500;
+        background: rgba(15, 10, 20, 0.98); /* Темный фон меню */
+        transition: 0.3s;
+        padding-top: 80px; /* Отступ, чтобы кнопки не налезли на крестик */
+    }
+    
+    /* Когда JS добавляет класс active - меню выезжает */
+    .sidebar.active {
+        left: 0;
+    }
+
+    /* 4. Контент: На всю ширину */
+    .content-area {
+        width: 100%;
+        margin: 0;
+        padding: 80px 20px 20px 20px; /* Отступ сверху под кнопку */
+        height: auto;
+        overflow: visible; /* Разрешаем листать вниз */
+    }
+
+    /* 5. Фиксы для картинок и чата */
+    img, video, iframe, .custom-player {
+        max-width: 100% !important;
+        height: auto;
+    }
+    
+    /* Чат не должен сплющиваться */
+    .chat-container iframe {
+        height: 500px !important;
+    }
+}
 
     /* 3. МЕНЮ (SIDEBAR) - СКРЫТОЕ */
     .sidebar {
@@ -501,4 +543,3 @@ input[type=range]::-webkit-slider-thumb {
         max-width: 100% !important;
         height: auto;
     }
-}
