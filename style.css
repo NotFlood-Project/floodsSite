@@ -359,24 +359,44 @@ input[type=range]::-webkit-slider-thumb {
     border-left: 4px solid #fff;
 }
 
-/* === КАРТОЧКА УЧАСТНИКА (НОВОЕ!) === */
+/* === КАРТОЧКА УЧАСТНИКА (ИСПРАВЛЕННАЯ) === */
 .participant-card {
-    /* Центрируем текст и контент */
+    /* Центрируем текст */
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     
-    /* Отступы, чтобы фон крови было видно */
-    padding: 35px 10px; 
-    margin-bottom: 20px;
+    /* ВАЖНО: Отступы */
+    padding: 10px;         /* Отступ сверху и сбоку */
+    padding-bottom: 50px;  /* ОГРОМНЫЙ отступ снизу, чтобы освободить место для крови */
+    margin-bottom: 10px;   /* Расстояние до следующего участника */
 
     /* Кровавый фон */
-    background-image: url('assets/blood12.gif'); /* Проверь имя файла! */
+    background-image: url('assets/blood12.gif'); 
     background-repeat: no-repeat;
-    background-position: center center; /* Кровь по центру за текстом */
-    background-size: 300px auto; /* Размер пятна */
+    
+    /* СТАВИМ КРОВЬ ВНИЗ КАРТОЧКИ */
+    background-position: center bottom; 
+    
+    /* Размер крови (можешь менять 300px на 400px или 100%, как нравится) */
+    background-size: 350px auto; 
+}
+
+.participant-card h3 {
+    margin: 0 0 10px 0; /* Отступ между Именем и Описанием */
+    color: #fff;
+    font-size: 1.5em;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); /* Красная тень */
+}
+
+.participant-card p {
+    margin: 0;
+    color: #e0e0e0;
+    font-style: italic;
+    font-size: 1.1em;
+    max-width: 80%; /* Чтобы длинный текст не был слишком широким */
 }
 
 .participant-card h3 {
