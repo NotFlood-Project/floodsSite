@@ -41,8 +41,17 @@ const playlist = [
     {
         title: "Миша: Radiohead - Climbing Up The Walls",
         src: "music/song2.mp3" 
-    }
-    // Можешь добавить еще: { title: "Имя", src: "путь" },
+    },
+    {
+        title: "Яоши: Монеточка - птичка",
+        src: "music/song3.mp3" 
+    },
+    {
+        title: "Март 7: Рashasnickers - двигай",
+        src: "music/song4.mp3" 
+    },
+
+    // добавить еще: { title: "Имя", src: "путь" },
 ];
 
 let currentTrackIndex = 0;
@@ -141,4 +150,33 @@ function setVolume() {
     audio.volume = volumeBar.value;
 }
 
+/* === УПРАВЛЕНИЕ МОБИЛЬНЫМ МЕНЮ === */
 
+// 1. Открыть/Закрыть меню по кнопке
+function toggleMenu() {
+    const sidebar = document.querySelector('.sidebar');
+    const burger = document.getElementById('burger-btn');
+    
+    // Добавляем или убираем класс 'active'
+    sidebar.classList.toggle('active');
+    
+    // Для красоты: меняем значок ☰ на крестик X
+    if (sidebar.classList.contains('active')) {
+        burger.textContent = '✕';
+    } else {
+        burger.textContent = '☰';
+    }
+}
+
+// 2. Закрывать меню автоматически, когда нажала на раздел
+// Находим все кнопки в меню и вешаем на них прослушку
+document.querySelectorAll('.sidebar .nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const sidebar = document.querySelector('.sidebar');
+        const burger = document.getElementById('burger-btn');
+        
+        // Убираем класс активности (скрываем меню)
+        sidebar.classList.remove('active');
+        burger.textContent = '☰';
+    });
+});
