@@ -26,7 +26,7 @@ body {
     
     /* ФОН */
     background-color: #050505; /* Черная подложка */
-    background-image: url('assets/bg.jpg'); /* ПРОВЕРЬ ПУТЬ! */
+    background-image: url('assets/bg.jpg'); 
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -103,7 +103,7 @@ body {
 .nav-btn:hover, .nav-btn.active {
     background: rgba(157, 0, 255, 0.15);
     color: white;
-    border-left: 4px solid #9d00ff;
+    border-left: 4px solid #9d00ffbb;
 }
 
 /* =========================================
@@ -187,7 +187,7 @@ img, video {
    ========================================= */
 .custom-player {
     /* Делаем полоску */
-    background: #cf8bffca; /* Светло-фиолетовый (Лаванда) */
+    background: #cf8bff75; /* Светло-фиолетовый (Лаванда) */
     border-radius: 50px; /* Овальная форма */
     padding: 10px 25px;
     width: 100%;
@@ -357,6 +357,41 @@ input[type=range]::-webkit-slider-thumb {
     padding: 15px;
     margin-bottom: 10px;
     border-left: 4px solid #fff;
+}
+
+/* === КАРТОЧКА УЧАСТНИКА (НОВОЕ!) === */
+.participant-card {
+    /* Центрируем текст и контент */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    /* Отступы, чтобы фон крови было видно */
+    padding: 35px 10px; 
+    margin-bottom: 20px;
+
+    /* Кровавый фон */
+    background-image: url('assets/blood12.gif'); /* Проверь имя файла! */
+    background-repeat: no-repeat;
+    background-position: center center; /* Кровь по центру за текстом */
+    background-size: 300px auto; /* Размер пятна */
+}
+
+.participant-card h3 {
+    margin: 0 0 5px 0;
+    color: #fff;
+    font-size: 1.5em;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.8); /* Тень для читаемости на красном */
+}
+
+.participant-card p {
+    margin: 0;
+    color: #e0e0e0;
+    font-style: italic;
+    font-size: 1.1em;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.8);
 }
 
 /* =========================================
