@@ -359,21 +359,20 @@ input[type=range]::-webkit-slider-thumb {
     border-left: 4px solid #fff;
 }
 
-/* === КАРТОЧКА УЧАСТНИКА (ИСПРАВЛЕННАЯ) === */
 /* === ПРОСТО ТЕКСТ ПО ЦЕНТРУ (БЕЗ ФОНА) === */
 .participant-card {
     text-align: center;     /* Текст по центру */
-    margin-bottom: 10px;    /* Немного места снизу до гифки */
+    margin: 10px auto;      /* Отступы сверху/снизу */
+    padding: 0;             /* Убираем внутренние отступы */
     background: none;       /* Убираем фон */
     border: none;           /* Убираем рамки */
-    padding: 0;             /* Убираем отступы */
 }
 
 .participant-card h3 {
     margin-bottom: 5px;
     color: #fff;
     font-size: 1.5em;
-    text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); /* Красное свечение */
 }
 
 .participant-card p {
@@ -383,44 +382,15 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 /* === КЛАСС ДЛЯ ГИФКИ-РАЗДЕЛИТЕЛЯ === */
-/* Чтобы не писать style="display: block..." каждый раз вручную */
 .blood-divider {
-    display: block;        /* Делаем блоком */
-    margin: 10px auto 30px auto; /* auto по бокам = центр. 30px снизу = отступ до следующего */
-    width: 300px;          /* Ширина гифки (меняй, если надо больше/меньше) */
-    max-width: 100%;       /* Чтобы на телефоне не вылезала */
+    display: block;              /* Чтобы можно было центрировать */
+    margin: 5px auto 25px auto;  /* Центруем + отступ снизу */
+    width: 300px;                /* Ширина линии */
+    max-width: 90%;              /* Чтобы на телефоне не вылезала */
     height: auto;
 }
 
-.participant-card h3 {
-    margin: 0 0 10px 0; /* Отступ между Именем и Описанием */
-    color: #fff;
-    font-size: 1.5em;
-    text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); /* Красная тень */
-}
 
-.participant-card p {
-    margin: 0;
-    color: #e0e0e0;
-    font-style: italic;
-    font-size: 1.1em;
-    max-width: 80%; /* Чтобы длинный текст не был слишком широким */
-}
-
-.participant-card h3 {
-    margin: 0 0 5px 0;
-    color: #fff;
-    font-size: 1.5em;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.8); /* Тень для читаемости на красном */
-}
-
-.participant-card p {
-    margin: 0;
-    color: #e0e0e0;
-    font-style: italic;
-    font-size: 1.1em;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.8);
-}
 
 /* =========================================
    8. МОБИЛЬНАЯ ВЕРСИЯ (ФИНАЛ)
