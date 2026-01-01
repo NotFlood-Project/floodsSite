@@ -1,64 +1,60 @@
-// Переключение вкладок
-function openSection(sectionId) {
-    // 1. Скрываем все секции
-    const sections = document.querySelectorAll('.page-section');
-    sections.forEach(section => {
-        section.classList.remove('active-section');
-    });
+/* === УНИВЕРСАЛЬНОЕ ПЕРЕКЛЮЧЕНИЕ РАЗДЕЛОВ === */
+function showSection(sectionId) {
+    // 1. Проверяем, существует ли раздел
+    const targetSection = document.getElementById(sectionId);
 
-    // 2. Убираем подсветку кнопок
-    const buttons = document.querySelectorAll('.nav-btn');
-    buttons.forEach(btn => {
-        btn.classList.remove('active');
-    });
-
-    // 3. Показываем нужную секцию
-    const target = document.getElementById(sectionId);
-    if (target) {
-        target.classList.add('active-section');
+    if (!targetSection) {
+        console.error('Ошибка: Раздел с ID "' + sectionId + '" не найден в HTML');
+        return;
     }
 
-    // 4. Подсвечиваем кнопку
-    buttons.forEach(btn => {
+    // 2. Скрываем все разделы
+    const allSections = document.querySelectorAll('.page-section');
+    allSections.forEach(section => {
+        section.classList.remove('active-section');
+        section.style.display = 'none';
+    });
+
+    // 3. Показываем нужный раздел
+    targetSection.style.display = 'block';
+    setTimeout(() => {
+        targetSection.classList.add('active-section');
+    }, 10);
+
+    // 4. Подсвечиваем кнопку в меню
+    const allButtons = document.querySelectorAll('.nav-btn');
+    allButtons.forEach(btn => {
+        btn.classList.remove('active');
+        // Проверяем, ведет ли кнопка на этот раздел
         if(btn.getAttribute('onclick').includes(sectionId)) {
             btn.classList.add('active');
         }
     });
+
+    // 5. Прокручиваем страницу вверх
+    window.scrollTo(0, 0);
+
+    // 6. Если это телефон — закрываем шторку меню
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar && sidebar.classList.contains('active')) {
+        toggleMenu();
+    }
 }
 
-// Музыкальный плеер
+/* === МУЗЫКАЛЬНЫЙ ПЛЕЕР === */
 let currentAudio = null;
-
-/* --- УМНЫЙ ПЛЕЕР --- */
-
-// 1. Список песен (Playlist)
-// ВАЖНО: Добавляй сюда свои песни. Пути должны быть правильными!
 const playlist = [
-    {
-        title: "Дань Хэн: Scorpions - Still Loving You",
-        src: "music/song1.mp3" 
-    },
-    {
-        title: "Миша: Radiohead - Climbing Up The Walls",
-        src: "music/song2.mp3" 
-    },
-    {
-        title: "Яоши: Монеточка - птичка",
-        src: "music/song3.mp3" 
-    },
-    {
-        title: "Март 7: Рashasnickers - двигай",
-        src: "music/song4.mp3" 
-    },
-
-    // добавить еще: { title: "Имя", src: "путь" },
+    { title: "Дань Хэн: Scorpions - Still Loving You", src: "music/song1.mp3" },
+    { title: "Миша: Radiohead - Climbing Up The Walls", src: "music/song2.mp3" },
+    { title: "Яоши: Монеточка - птичка", src: "music/song3.mp3" },
+    { title: "Март 7: Рashasnickers - двигай", src: "music/song4.mp3" }
 ];
 
 let currentTrackIndex = 0;
 let isPlaying = false;
-let audio = new Audio(); // Создаем плеер
+let audio = new Audio();
 
-// Элементы управления из HTML
+// Элементы плеера
 const titleLabel = document.getElementById('track-title');
 const playBtn = document.getElementById('play-btn');
 const progressBar = document.getElementById('progress-bar');
@@ -66,150 +62,96 @@ const currentTimeLabel = document.getElementById('current-time');
 const durationLabel = document.getElementById('duration');
 const volumeBar = document.getElementById('volume-bar');
 
-// Функция: Загрузить песню (по номеру)
 function loadTrack(index) {
     currentTrackIndex = index;
     audio.src = playlist[index].src;
     titleLabel.innerText = playlist[index].title;
-    
-    // Сразу включаем
     playSong();
 }
 
-// Функция: Играть
 function playSong() {
     audio.play();
     isPlaying = true;
-    playBtn.innerText = "⏸"; // Значок паузы
+    if(playBtn) playBtn.innerText = "⏸";
 }
 
-// Функция: Пауза
 function pauseSong() {
     audio.pause();
     isPlaying = false;
-    playBtn.innerText = "▶"; // Значок плей
+    if(playBtn) playBtn.innerText = "▶";
 }
 
-// Кнопка Плей/Пауза
 function togglePlay() {
     if (isPlaying) {
         pauseSong();
     } else {
-        // Если песня не выбрана, включаем первую
-        if (!audio.src) {
-            loadTrack(0);
-        } else {
-            playSong();
-        }
+        if (!audio.src) loadTrack(0);
+        else playSong();
     }
 }
 
-// Следующая песня
 function nextTrack() {
     currentTrackIndex++;
-    if (currentTrackIndex > playlist.length - 1) {
-        currentTrackIndex = 0; // Если конец, идем в начало
-    }
+    if (currentTrackIndex > playlist.length - 1) currentTrackIndex = 0;
     loadTrack(currentTrackIndex);
 }
 
-// Предыдущая песня
 function prevTrack() {
     currentTrackIndex--;
-    if (currentTrackIndex < 0) {
-        currentTrackIndex = playlist.length - 1;
-    }
+    if (currentTrackIndex < 0) currentTrackIndex = playlist.length - 1;
     loadTrack(currentTrackIndex);
 }
 
-// Обновление ползунка времени (каждую секунду)
+// Обновление прогресс-бара
 audio.addEventListener('timeupdate', () => {
-    const progress = (audio.currentTime / audio.duration) * 100;
-    progressBar.value = progress || 0;
+    if(progressBar) {
+        const progress = (audio.currentTime / audio.duration) * 100;
+        progressBar.value = progress || 0;
+    }
+    
+    // Время
+    if(currentTimeLabel) {
+        let curMins = Math.floor(audio.currentTime / 60);
+        let curSecs = Math.floor(audio.currentTime % 60);
+        if(curSecs < 10) curSecs = "0" + curSecs;
+        currentTimeLabel.innerText = `${curMins}:${curSecs}`;
+    }
 
-    // Обновляем цифры времени 0:00
-    let curMins = Math.floor(audio.currentTime / 60);
-    let curSecs = Math.floor(audio.currentTime % 60);
-    if(curSecs < 10) curSecs = "0" + curSecs;
-    currentTimeLabel.innerText = `${curMins}:${curSecs}`;
-
-    let durMins = Math.floor(audio.duration / 60);
-    let durSecs = Math.floor(audio.duration % 60);
-    if(durSecs < 10) durSecs = "0" + durSecs;
-    if(audio.duration) durationLabel.innerText = `${durMins}:${durSecs}`;
+    if(durationLabel && audio.duration) {
+        let durMins = Math.floor(audio.duration / 60);
+        let durSecs = Math.floor(audio.duration % 60);
+        if(durSecs < 10) durSecs = "0" + durSecs;
+        durationLabel.innerText = `${durMins}:${durSecs}`;
+    }
 });
 
-// Перемотка (когда двигаешь ползунок)
 function seekAudio() {
     const seekTime = (progressBar.value / 100) * audio.duration;
     audio.currentTime = seekTime;
 }
 
-// Громкость
 function setVolume() {
-    audio.volume = volumeBar.value;
+    if(volumeBar) audio.volume = volumeBar.value;
 }
 
-/* === УПРАВЛЕНИЕ МОБИЛЬНЫМ МЕНЮ === */
-
-// 1. Открыть/Закрыть меню по кнопке
+/* === МОБИЛЬНОЕ МЕНЮ (ШТОРКА) === */
 function toggleMenu() {
     const sidebar = document.querySelector('.sidebar');
     const burger = document.getElementById('burger-btn');
     
-    // Добавляем или убираем класс 'active'
-    sidebar.classList.toggle('active');
-    
-    // Для красоты: меняем значок ☰ на крестик X
-    if (sidebar.classList.contains('active')) {
-        burger.textContent = '✕';
-    } else {
-        burger.textContent = '☰';
+    if(sidebar) {
+        sidebar.classList.toggle('active');
+        
+        if (sidebar.classList.contains('active')) {
+            if(burger) burger.textContent = '✕';
+        } else {
+            if(burger) burger.textContent = '☰';
+        }
     }
 }
 
-// 2. Закрывать меню автоматически, когда нажала на раздел
-// Находим все кнопки в меню и вешаем на них прослушку
-document.querySelectorAll('.sidebar .nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const sidebar = document.querySelector('.sidebar');
-        const burger = document.getElementById('burger-btn');
-        
-        // Убираем класс активности (скрываем меню)
-        sidebar.classList.remove('active');
-        burger.textContent = '☰';
-    });
+/* === ЗАПУСК ПРИ ВХОДЕ === */
+document.addEventListener('DOMContentLoaded', () => {
+    // Открываем главную страницу сразу
+    showSection('welcome');
 });
-
-
-
-/* === ДОБАВИТЬ В КОНЕЦ ФАЙЛА SCRIPT.JS === */
-
-function showSection(sectionId) {
-    // 1. Находим все разделы и скрываем их
-    const allSections = document.querySelectorAll('.page-section');
-    allSections.forEach(section => {
-        section.classList.remove('active-section'); // Убираем класс видимости
-        section.style.display = 'none'; // На всякий случай скрываем через стиль
-    });
-
-    // 2. Находим тот раздел, который ты хочешь открыть
-    const targetSection = document.getElementById(sectionId);
-    
-    // 3. Если нашли — показываем
-    if (targetSection) {
-        targetSection.classList.add('active-section'); // Возвращаем класс видимости
-        targetSection.style.display = 'block'; // Показываем блок
-        
-        // Прокручиваем вверх
-        window.scrollTo(0, 0); 
-    } else {
-        console.log('Ошибка: Раздел ' + sectionId + ' не найден в HTML');
-    }
-
-    // 4. Закрываем меню (если это телефон)
-    const sidebar = document.querySelector('.sidebar');
-    if (sidebar) {
-        sidebar.classList.remove('active');
-    }
-}
