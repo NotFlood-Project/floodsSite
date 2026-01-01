@@ -424,58 +424,69 @@ input[type=range]::-webkit-slider-thumb {
 
 
 
-/* --- АДАПТАЦИЯ ПОД ТЕЛЕФОНЫ (ИСПРАВЛЕННАЯ ВЕРСИЯ 2.0) --- */
-/* Вставь это в САМЫЙ КОНЕЦ style.css */
-
-@media (max-width: 768px) {
+/* --- АДАПТАЦИЯ ПОД АЙФОНЫ И ВЕРТИКАЛЬНЫЕ ЭКРАНЫ --- */
+@media screen and (max-width: 768px) {
     
-    /* 0. Спасательный круг: запрещаем экрану ездить влево-вправо */
-    body, html {
-        overflow-x: hidden !important;
-        width: 100% !important;
+    /* 1. Выстраиваем всё в столбик (САМОЕ ВАЖНОЕ!) */
+    .main-wrapper {
+        display: flex;
+        flex-direction: column !important; /* Меню сверху, контент снизу */
+        width: 100%;
+        overflow-x: hidden; /* Запрет горизонтальной прокрутки */
     }
 
-    /* 1. Меню переезжает наверх и становится обычным блоком */
+    /* 2. Настраиваем Меню (Шапка) */
     .sidebar {
-        position: static !important; /* Самое важное: отменяем "прилипание" */
-        width: 100% !important;      /* Растягиваем на всю ширину */
-        height: auto !important;     /* Высота подстраивается под кнопки */
-        padding: 20px 0;
-        text-align: center;
-        /* Делаем кнопки в ряд, если влезают */
+        width: 100% !important;      /* На всю ширину экрана */
+        height: auto !important;     /* Высота зависит от кнопок */
+        position: relative !important; /* Отклеиваем от левого края */
+        padding: 15px 0;
+        
+        /* Центрируем содержимое */
         display: flex;
-        flex-wrap: wrap; 
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
     }
 
-    /* 2. Основной контент (Та самая "недееспособная" часть) */
+    /* Кнопки меню делаем аккуратными плитками */
+    .sidebar .nav-btn {
+        display: inline-block;
+        width: 90%; /* Почти на всю ширину пальца */
+        margin: 5px 0;
+        text-align: center;
+        font-size: 16px; /* Шрифт покрупнее для пальцев */
+    }
+
+    /* 3. Основной контент */
     .content-area {
-        margin-left: 0 !important;  /* ЖЕСТКО убираем отступ слева */
-        width: 100% !important;     /* ЖЕСТКО делаем на всю ширину */
-        padding: 20px !important;   /* Добавляем воздуха по краям */
-        box-sizing: border-box;     /* Чтобы отступы не ломали ширину */
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding: 15px !important;
+        box-sizing: border-box; /* Чтобы рамки не ломали ширину */
     }
 
-    /* --- Остальные стили для красоты на телефоне --- */
-
-    /* Логотип поменьше */
-    .sidebar-logo-img { width: 70px; height: 70px; margin-bottom: 10px; }
-    .logo { font-size: 20px; width: 100%; margin-bottom: 15px;}
-
-    /* Кнопки меню компактнее */
-    .sidebar button {
-        width: auto; margin: 5px; padding: 8px 12px; font-size: 13px;
+    /* 4. Исправление логотипа (Черный круг на скрине) */
+    .sidebar-logo-img {
+        width: 80px !important;  /* Фиксируем размер */
+        height: 80px !important;
+        object-fit: contain;     /* Чтобы не сплющивался */
+        border-radius: 50%;
+        margin-bottom: 10px;
     }
-
-    /* Интерактивы в столбик */
-    .interactive-item { flex-direction: column; text-align: center; }
-    .interactive-item img { margin: 0 auto 15px auto; width: 70%; height: auto; border-radius: 15px;}
     
-    /* Плеер и картинки не вылезают */
-    .custom-player, img, .text-block { max-width: 100%; }
+    /* Исправляем огромный шрифт названия */
+    .logo {
+        font-size: 24px !important;
+        margin-bottom: 20px;
+    }
+
+    /* Исправление плеера, чтобы не вылезал */
+    .custom-player {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
 }
-
-
 
 
 /* Настройки для чата */
