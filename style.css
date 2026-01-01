@@ -392,6 +392,98 @@ input[type=range]::-webkit-slider-thumb {
 
 
 
+
+
+/* === НОВОСТИ ФЛУДА (СТИЛЬ ПОСТОВ) === */
+
+.news-item {
+    display: flex;          /* Ставим аву и текст в один ряд */
+    gap: 20px;              /* Расстояние между авой и текстом */
+    margin-bottom: 30px;    /* Отступ до следующей новости */
+    align-items: flex-start; /* Выравнивание по верхнему краю */
+}
+
+/* Настройки аватарки */
+.news-avatar img {
+    width: 80px;            /* Размер авы */
+    height: 80px;
+    object-fit: cover;      /* Чтобы не сплющивалась */
+    border-radius: 10px;    /* Чуть скруглим углы (или 50% для круга) */
+    border: 2px solid #7b3ce7bc; /* Фиолетовая рамка */
+    box-shadow: 0 0 10px rgba(123, 60, 231, 0.3);
+}
+
+/* Блок с текстом (справа) */
+.news-content {
+    flex: 1;                /* Занимает все оставшееся место */
+    background: rgba(20, 10, 30, 0.8); /* Темный полупрозрачный фон */
+    border: 1px solid #555;
+    border-radius: 10px;    /* Скругленные углы блока */
+    padding: 15px;          /* Отступы внутри рамки */
+    position: relative;
+}
+
+/* Шапка новости (Имя + Дата) */
+.news-header {
+    display: flex;
+    justify-content: space-between; /* Имя слева, дата справа */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Линия подчеркивания */
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+.news-role {
+    font-weight: bold;
+    color: #9d00ff;         /* Цвет имени (фиолетовый) */
+    font-size: 1.2em;
+    text-transform: uppercase; /* Делает имя ЗАГЛАВНЫМИ */
+}
+
+.news-date {
+    color: #888;            /* Дата серенькая */
+    font-size: 0.9em;
+    font-family: monospace; /* Шрифт как на часах */
+}
+
+/* Тема новости */
+.news-topic {
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 5px;
+    text-decoration: underline; /* Подчеркивание темы */
+    text-decoration-color: #7b3ce7;
+}
+
+.news-text {
+    color: #e0e0e0;
+    line-height: 1.5;       /* Чтобы удобно читать */
+}
+
+/* --- АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНА --- */
+@media screen and (max-width: 600px) {
+    .news-item {
+        gap: 10px; /* На телефоне аву поближе к тексту */
+    }
+    .news-avatar img {
+        width: 50px; /* Аватарка поменьше */
+        height: 50px;
+    }
+    .news-role {
+        font-size: 1em; /* Имя поменьше */
+    }
+    .news-date {
+        font-size: 0.75em; /* Дата поменьше */
+    }
+}
+
+
+
+
+
+
+
+
+
 /* =========================================
    8. МОБИЛЬНАЯ ВЕРСИЯ (ФИНАЛ)
    ========================================= */
