@@ -187,7 +187,7 @@ img, video {
    ========================================= */
 .custom-player {
     /* Делаем полоску */
-    background: #E6E6FA; /* Светло-фиолетовый (Лаванда) */
+    background: #cf8bffca; /* Светло-фиолетовый (Лаванда) */
     border-radius: 50px; /* Овальная форма */
     padding: 10px 25px;
     width: 100%;
@@ -395,7 +395,7 @@ input[type=range]::-webkit-slider-thumb {
         left: 20px;
         z-index: 2500;
         background: #7b3ce7;
-        color: white;
+        color: rgb(255, 255, 255);
         border: none;
         width: 50px;
         height: 50px;
