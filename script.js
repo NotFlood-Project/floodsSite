@@ -1,48 +1,70 @@
-/* === УНИВЕРСАЛЬНОЕ ПЕРЕКЛЮЧЕНИЕ РАЗДЕЛОВ === */
+/* =================================================================
+   ГЛАВНЫЙ МОЗГ САЙТА (ИСПРАВЛЕННЫЙ И НАДЕЖНЫЙ)
+   ================================================================= */
+
+// Эта функция работает и если кнопка просит showSection, и openSection
 function showSection(sectionId) {
-    // 1. Проверяем, существует ли раздел
+    console.log("Пытаюсь открыть раздел: " + sectionId);
+
+    // 1. Ищем раздел в HTML по ID
     const targetSection = document.getElementById(sectionId);
 
+    // Если раздела нет — не ломаем сайт, а просто сообщаем и выходим
     if (!targetSection) {
-        console.error('Ошибка: Раздел с ID "' + sectionId + '" не найден в HTML');
+        console.error("ОШИБКА: Раздел с ID '" + sectionId + "' не найден!");
+        alert("Ошибка! Проверь, правильно ли написан ID в HTML: " + sectionId);
         return;
     }
 
-    // 2. Скрываем все разделы
+    // 2. Скрываем ВСЕ разделы
     const allSections = document.querySelectorAll('.page-section');
     allSections.forEach(section => {
-        section.classList.remove('active-section');
-        section.style.display = 'none';
+        section.style.display = 'none'; // Прячем
+        section.classList.remove('active-section'); // Убираем класс активности
     });
 
-    // 3. Показываем нужный раздел
-    targetSection.style.display = 'block';
+    // 3. Показываем НУЖНЫЙ раздел
+    targetSection.style.display = 'block'; 
+    // Маленькая задержка для плавности (чтобы CSS успел подхватить)
     setTimeout(() => {
         targetSection.classList.add('active-section');
     }, 10);
 
-    // 4. Подсвечиваем кнопку в меню
+    // 4. Прокручиваем страницу вверх
+    window.scrollTo(0, 0);
+
+    // 5. Управление кнопками меню (подсветка)
     const allButtons = document.querySelectorAll('.nav-btn');
     allButtons.forEach(btn => {
         btn.classList.remove('active');
-        // Проверяем, ведет ли кнопка на этот раздел
-        if(btn.getAttribute('onclick').includes(sectionId)) {
+        // Если кнопка ведет на этот раздел — подсвечиваем её
+        if (btn.getAttribute('onclick').includes(sectionId)) {
             btn.classList.add('active');
         }
     });
 
-    // 5. Прокручиваем страницу вверх
-    window.scrollTo(0, 0);
-
-    // 6. Если это телефон — закрываем шторку меню
+    // 6. Закрываем мобильное меню (если оно открыто)
     const sidebar = document.querySelector('.sidebar');
-    if (sidebar && sidebar.classList.contains('active')) {
-        toggleMenu();
+    const burger = document.getElementById('burger-btn');
+    if (sidebar) {
+        sidebar.classList.remove('active');
+        if (burger) burger.textContent = '☰';
     }
 }
 
-/* === МУЗЫКАЛЬНЫЙ ПЛЕЕР === */
-let currentAudio = null;
+// --- ЗАПАСНОЙ ВХОД (Для совместимости со старыми кнопками) ---
+// Если в HTML где-то осталось openSection, оно перенаправит сюда
+function openSection(id) {
+    showSection(id);
+}
+
+/* =================================================================
+   МУЗЫКАЛЬНЫЙ ПЛЕЕР (ЧТОБЫ МУЗЫКА ИГРАЛА)
+   ================================================================= */
+let currentAudio = new Audio();
+let isPlaying = false;
+let currentTrackIndex = 0;
+
 const playlist = [
     { title: "Дань Хэн: Scorpions - Still Loving You", src: "music/song1.mp3" },
     { title: "Миша: Radiohead - Climbing Up The Walls", src: "music/song2.mp3" },
@@ -50,108 +72,67 @@ const playlist = [
     { title: "Март 7: Рashasnickers - двигай", src: "music/song4.mp3" }
 ];
 
-let currentTrackIndex = 0;
-let isPlaying = false;
-let audio = new Audio();
-
-// Элементы плеера
-const titleLabel = document.getElementById('track-title');
-const playBtn = document.getElementById('play-btn');
-const progressBar = document.getElementById('progress-bar');
-const currentTimeLabel = document.getElementById('current-time');
-const durationLabel = document.getElementById('duration');
-const volumeBar = document.getElementById('volume-bar');
-
 function loadTrack(index) {
+    if (index >= playlist.length) index = 0;
+    if (index < 0) index = playlist.length - 1;
+    
     currentTrackIndex = index;
-    audio.src = playlist[index].src;
-    titleLabel.innerText = playlist[index].title;
+    currentAudio.src = playlist[index].src;
+    
+    const titleLabel = document.getElementById('track-title');
+    if (titleLabel) titleLabel.innerText = playlist[index].title;
+    
     playSong();
 }
 
 function playSong() {
-    audio.play();
+    currentAudio.play();
     isPlaying = true;
-    if(playBtn) playBtn.innerText = "⏸";
-}
-
-function pauseSong() {
-    audio.pause();
-    isPlaying = false;
-    if(playBtn) playBtn.innerText = "▶";
+    const playBtn = document.getElementById('play-btn');
+    if (playBtn) playBtn.innerText = "⏸";
 }
 
 function togglePlay() {
     if (isPlaying) {
-        pauseSong();
+        currentAudio.pause();
+        isPlaying = false;
+        document.getElementById('play-btn').innerText = "▶";
     } else {
-        if (!audio.src) loadTrack(0);
+        if (!currentAudio.src && playlist.length > 0) loadTrack(0);
         else playSong();
     }
 }
 
-function nextTrack() {
-    currentTrackIndex++;
-    if (currentTrackIndex > playlist.length - 1) currentTrackIndex = 0;
-    loadTrack(currentTrackIndex);
-}
+function nextTrack() { loadTrack(currentTrackIndex + 1); }
+function prevTrack() { loadTrack(currentTrackIndex - 1); }
 
-function prevTrack() {
-    currentTrackIndex--;
-    if (currentTrackIndex < 0) currentTrackIndex = playlist.length - 1;
-    loadTrack(currentTrackIndex);
-}
-
-// Обновление прогресс-бара
-audio.addEventListener('timeupdate', () => {
-    if(progressBar) {
-        const progress = (audio.currentTime / audio.duration) * 100;
-        progressBar.value = progress || 0;
-    }
-    
-    // Время
-    if(currentTimeLabel) {
-        let curMins = Math.floor(audio.currentTime / 60);
-        let curSecs = Math.floor(audio.currentTime % 60);
-        if(curSecs < 10) curSecs = "0" + curSecs;
-        currentTimeLabel.innerText = `${curMins}:${curSecs}`;
-    }
-
-    if(durationLabel && audio.duration) {
-        let durMins = Math.floor(audio.duration / 60);
-        let durSecs = Math.floor(audio.duration % 60);
-        if(durSecs < 10) durSecs = "0" + durSecs;
-        durationLabel.innerText = `${durMins}:${durSecs}`;
-    }
-});
-
-function seekAudio() {
-    const seekTime = (progressBar.value / 100) * audio.duration;
-    audio.currentTime = seekTime;
-}
-
-function setVolume() {
-    if(volumeBar) audio.volume = volumeBar.value;
-}
-
-/* === МОБИЛЬНОЕ МЕНЮ (ШТОРКА) === */
+/* =================================================================
+   МОБИЛЬНОЕ МЕНЮ
+   ================================================================= */
 function toggleMenu() {
     const sidebar = document.querySelector('.sidebar');
     const burger = document.getElementById('burger-btn');
-    
-    if(sidebar) {
+    if (sidebar) {
         sidebar.classList.toggle('active');
-        
-        if (sidebar.classList.contains('active')) {
-            if(burger) burger.textContent = '✕';
-        } else {
-            if(burger) burger.textContent = '☰';
+        if (burger) {
+            burger.textContent = sidebar.classList.contains('active') ? '✕' : '☰';
         }
     }
 }
 
-/* === ЗАПУСК ПРИ ВХОДЕ === */
+/* =================================================================
+   ЗАПУСК ПРИ ВХОДЕ (САМОЕ ВАЖНОЕ!)
+   ================================================================= */
 document.addEventListener('DOMContentLoaded', () => {
-    // Открываем главную страницу сразу
-    showSection('welcome');
+    // 1. Пытаемся открыть раздел 'welcome' (Главная)
+    const welcome = document.getElementById('welcome');
+    if (welcome) {
+        showSection('welcome');
+    } else {
+        // Если 'welcome' не нашли, открываем самый первый раздел, который есть
+        const firstSection = document.querySelector('.page-section');
+        if (firstSection) {
+            showSection(firstSection.id);
+        }
+    }
 });
