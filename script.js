@@ -180,3 +180,36 @@ document.querySelectorAll('.sidebar .nav-btn').forEach(btn => {
         burger.textContent = '☰';
     });
 });
+
+
+
+/* === ДОБАВИТЬ В КОНЕЦ ФАЙЛА SCRIPT.JS === */
+
+function showSection(sectionId) {
+    // 1. Находим все разделы и скрываем их
+    const allSections = document.querySelectorAll('.page-section');
+    allSections.forEach(section => {
+        section.classList.remove('active-section'); // Убираем класс видимости
+        section.style.display = 'none'; // На всякий случай скрываем через стиль
+    });
+
+    // 2. Находим тот раздел, который ты хочешь открыть
+    const targetSection = document.getElementById(sectionId);
+    
+    // 3. Если нашли — показываем
+    if (targetSection) {
+        targetSection.classList.add('active-section'); // Возвращаем класс видимости
+        targetSection.style.display = 'block'; // Показываем блок
+        
+        // Прокручиваем вверх
+        window.scrollTo(0, 0); 
+    } else {
+        console.log('Ошибка: Раздел ' + sectionId + ' не найден в HTML');
+    }
+
+    // 4. Закрываем меню (если это телефон)
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        sidebar.classList.remove('active');
+    }
+}
