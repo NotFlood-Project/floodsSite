@@ -53,12 +53,11 @@ function openSection(sectionId) {
 const playlist = [
     { title: "Дань Хэн: Scorpions - Still Loving You", src: "music/song1.mp3" },
     { title: "Март 7: Рashasnickers - двигай", src: "music/song4.mp3" },
-    { title: "Чёрный лебедь: The American down - Her", src: "music/song5.mp3" },
-    { title: "Мидей: Mindless self indulgence - Seven minutes in heaven", src: "music/song6.mp3" },
     { title: "Георгина: Haunted - Beyonce", src: "music/song7.mp3" },
     { title: "Кирена: Mac Miller - Messages from the stars", src: "music/song8.mp3" },
     { title: "Раппа: Radiohead - All I Need", src: "music/song10.mp3" },
-    { title: "Галлахер: Blondie - One way or another", src: "music/song11.mp3" }
+    { title: "Галлахер: Blondie - One way or another", src: "music/song11.mp3" },
+    { title: "Каослана: Sullivian King - Thrones of blood", src: "music/song12.mp3" }
 ];
 
 let currentTrackIndex = 0;
