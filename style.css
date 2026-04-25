@@ -578,6 +578,7 @@ input[type=range]::-webkit-slider-thumb {
    СУДОКУ — ПОЛНЫЙ СТИЛЬ
    ========================================= */
 .sudoku-wrapper {
+    width: 100%; /* Вот главное спасение */
     max-width: 400px;
     margin: 0 auto;
     display: flex;
@@ -588,6 +589,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 #sudoku-board {
+    width: 100%; /* И здесь для надежности */
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     aspect-ratio: 1;
@@ -595,6 +597,14 @@ input[type=range]::-webkit-slider-thumb {
     border: 3px solid #888;
     border-radius: 8px;
     overflow: hidden;
+}
+
+/* На всякий случай добавим и сюда, чтобы кнопки внизу не сплющило */
+.sudoku-numpad {
+    width: 100%; 
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 5px;
 }
 
 .sudoku-cell {
