@@ -545,7 +545,7 @@ function checkSudokuWin() {
     
     // Победа!
     setTimeout(() => {
-        alert('Поздравляю! Судоку решено! 🎉');
+        alert('Поздравляю! Судоку решён)');
     }, 100);
     
     return true;
