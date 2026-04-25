@@ -566,7 +566,7 @@ input[type=range]::-webkit-slider-thumb {
     .gallery-grid { grid-template-columns: 1fr; }
 
     .chat-container iframe { height: 500px !important; }
-
+}
 
 
 
@@ -823,4 +823,3 @@ input[type=range]::-webkit-slider-thumb {
         font-size: clamp(1rem, 4.5vw, 1.4rem);
     }
   }
-}
