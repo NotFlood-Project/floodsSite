@@ -574,113 +574,241 @@ input[type=range]::-webkit-slider-thumb {
 
 
 
-    /* =========================================
-   СУДОКУ
+ /* =========================================
+   СУДОКУ — ПОЛНЫЙ СТИЛЬ
    ========================================= */
 .sudoku-wrapper {
-    max-width: 450px;
+    max-width: 400px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 15px;
     user-select: none;
+    -webkit-user-select: none;
 }
 
 #sudoku-board {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
-    background-color: #555;
+    aspect-ratio: 1;
+    background-color: #444;
     border: 3px solid #888;
-    gap: 1px;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .sudoku-cell {
-    aspect-ratio: 1;
-    background-color: #1a1a1a;
+    background-color: #1a1a2e;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(1.2rem, 5vw, 1.8rem);
-    color: #ddd;
+    font-size: clamp(1.2rem, 6vw, 1.8rem);
+    font-weight: bold;
+    color: #e0e0e0;
     cursor: pointer;
     position: relative;
-    transition: background-color 0.2s;
+    transition: background-color 0.15s ease;
+    border: 1px solid #333;
 }
 
-/* Жирные линии для блоков 3x3 */
-.sudoku-cell:nth-child(3n) { border-right: 2px solid #888; }
-.sudoku-cell:nth-child(n+19):nth-child(-n+27),
-.sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid #888; }
-.sudoku-cell:nth-child(9n) { border-right: none; } /* Убираем крайнюю правую */
+/* Жирные границы для блоков 3x3 */
+.sudoku-cell[data-c="2"],
+.sudoku-cell[data-c="5"] {
+    border-right: 2px solid #888;
+}
+.sudoku-cell[data-r="2"],
+.sudoku-cell[data-r="5"] {
+    border-bottom: 2px solid #888;
+}
 
-/* Цвета состояний */
-.sudoku-cell.given { color: #fff; font-weight: bold; }
-.sudoku-cell.selected { background-color: #4a2c4a !important; } /* Фиолетовый акцент (выбранная) */
-.sudoku-cell.highlighted { background-color: #2a1f2a; } /* Подсветка строки/столбца */
-.sudoku-cell.same-number { background-color: #3b283b; } /* Подсветка таких же цифр */
-.sudoku-cell.error { color: #ff3333; } /* Ошибка (красный) */
+/* Состояния ячеек */
+.sudoku-cell.given {
+    color: #fff;
+    background-color: #252540;
+}
 
-/* Заметки (Notes) */
+.sudoku-cell.selected {
+    background-color: #5a3d7a !important;
+    box-shadow: inset 0 0 0 2px #a855f7;
+}
+
+.sudoku-cell.highlighted {
+    background-color: #2d2d4a;
+}
+
+.sudoku-cell.same-number {
+    background-color: #3d3d5c;
+}
+
+.sudoku-cell.error {
+    color: #ff4444 !important;
+}
+
+.sudoku-cell.error-flash {
+    animation: errorPulse 0.3s ease;
+}
+
+@keyframes errorPulse {
+    0%, 100% { background-color: #1a1a2e; }
+    50% { background-color: #4a1a1a; }
+}
+
+/* Заметки внутри ячейки */
 .sudoku-notes {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     width: 100%;
     height: 100%;
-    font-size: clamp(0.5rem, 2vw, 0.7rem);
-    color: #888;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 2px;
 }
+
 .note-num {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: clamp(0.4rem, 2vw, 0.6rem);
+    color: #8888aa;
+    font-weight: normal;
 }
 
-/* Кнопки управления и цифры */
+/* Кнопки управления */
 .sudoku-controls {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
 }
+
 .s-ctrl-btn {
     flex: 1;
-    background: transparent;
-    border: 1px solid #444;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: rgba(40, 30, 60, 0.8);
+    border: 1px solid #555;
     color: #aaa;
-    padding: 10px 5px;
-    border-radius: 8px;
+    padding: 12px 8px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 1.2rem;
+    transition: all 0.2s ease;
 }
-.s-ctrl-btn span { font-size: 0.8rem; display: block; margin-top: 5px; }
-.s-ctrl-btn.active { color: #fff; border-color: #888; background: #333; }
 
+.s-ctrl-btn:hover {
+    background: rgba(60, 45, 90, 0.9);
+    border-color: #777;
+}
+
+.s-ctrl-btn:active {
+    transform: scale(0.95);
+}
+
+.s-ctrl-btn.active {
+    color: #fff;
+    border-color: #a855f7;
+    background: rgba(80, 50, 120, 0.9);
+}
+
+.ctrl-icon {
+    font-size: 1.4rem;
+}
+
+.ctrl-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Цифровая панель */
 .sudoku-numpad {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     gap: 5px;
 }
+
 .num-btn {
-    background: #222;
+    aspect-ratio: 1;
+    background: linear-gradient(145deg, #2a2a4a, #1a1a2e);
     border: 1px solid #444;
     color: #fff;
-    font-size: 1.5rem;
-    padding: 10px 0;
-    border-radius: 5px;
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
+    font-weight: bold;
+    border-radius: 8px;
     cursor: pointer;
+    transition: all 0.15s ease;
     font-family: 'Old Standard TT', serif;
 }
-.num-btn:active { background: #555; }
 
+.num-btn:hover {
+    background: linear-gradient(145deg, #3a3a6a, #2a2a4a);
+    border-color: #666;
+}
+
+.num-btn:active {
+    transform: scale(0.92);
+    background: #4a3a7a;
+}
+
+.num-btn.completed {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* Кнопка новой игры */
 #btn-new-game {
-    background: #4a2c4a;
+    background: linear-gradient(145deg, #5a3d7a, #4a2c6a);
     color: #fff;
     border: none;
-    padding: 15px;
-    border-radius: 8px;
-    font-size: 1.1rem;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
     font-family: 'Old Standard TT', serif;
-    margin-top: 10px;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
+
+#btn-new-game:hover {
+    background: linear-gradient(145deg, #6a4d8a, #5a3d7a);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(123, 60, 231, 0.3);
+}
+
+#btn-new-game:active {
+    transform: translateY(0);
+}
+
+/* Адаптация для телефонов */
+@media screen and (max-width: 500px) {
+    .sudoku-wrapper {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    
+    .sudoku-cell {
+        font-size: clamp(1rem, 5vw, 1.4rem);
+    }
+    
+    .s-ctrl-btn {
+        padding: 10px 5px;
+    }
+    
+    .ctrl-icon {
+        font-size: 1.2rem;
+    }
+    
+    .ctrl-label {
+        font-size: 0.6rem;
+    }
+    
+    .num-btn {
+        font-size: clamp(1rem, 4.5vw, 1.4rem);
+    }
+  }
 }

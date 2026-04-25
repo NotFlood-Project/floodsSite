@@ -177,234 +177,470 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /* =========================================
-   СУДОКУ ЛОГИКА
+   СУДОКУ ЛОГИКА — ПОЛНАЯ ВЕРСИЯ
    ========================================= */
-let board = [];
-let solution = [];
-let initialBoard = [];
-let notes = [];
-let history = [];
-let selectedCell = null; // {r, c}
-let isNotesMode = false;
 
+let sudokuBoard = [];
+let sudokuSolution = [];
+let sudokuInitial = [];
+let sudokuNotes = [];
+let sudokuHistory = [];
+let sudokuSelected = null;
+let sudokuNotesMode = false;
+let sudokuInitialized = false;
+
+// Инициализация игры
 function initSudoku() {
-    generateSudoku();
-    history = [];
-    selectedCell = null;
-    isNotesMode = false;
-    document.getElementById('btn-notes').classList.remove('active');
-    document.getElementById('notes-status').innerText = "Notes OFF";
-    renderBoard();
+    generateSudokuPuzzle();
+    sudokuHistory = [];
+    sudokuSelected = null;
+    sudokuNotesMode = false;
+    
+    const notesBtn = document.getElementById('btn-notes');
+    if (notesBtn) {
+        notesBtn.classList.remove('active');
+        document.getElementById('notes-status').innerText = "Notes OFF";
+    }
+    
+    renderSudokuBoard();
+    updateNumpadState();
+    sudokuInitialized = true;
 }
 
-// Простой генератор (заполняем диагональные блоки, решаем, убираем ячейки)
-function generateSudoku() {
-    board = Array(9).fill().map(() => Array(9).fill(0));
-    solution = Array(9).fill().map(() => Array(9).fill(0));
-    initialBoard = Array(9).fill().map(() => Array(9).fill(0));
-    notes = Array(9).fill().map(() => Array(9).fill().map(() => []));
-
-    fillDiagonal();
-    solveSudoku(board);
+// Генерация судоку среднего уровня
+function generateSudokuPuzzle() {
+    // Создаем пустые массивы
+    sudokuBoard = Array(9).fill(null).map(() => Array(9).fill(0));
+    sudokuSolution = Array(9).fill(null).map(() => Array(9).fill(0));
+    sudokuInitial = Array(9).fill(null).map(() => Array(9).fill(0));
+    sudokuNotes = Array(9).fill(null).map(() => Array(9).fill(null).map(() => []));
+    
+    // Заполняем диагональные блоки 3x3
+    fillDiagonalBlocks();
+    
+    // Решаем судоку
+    solveSudokuBoard(sudokuBoard);
     
     // Копируем решение
-    for(let r=0; r<9; r++) for(let c=0; c<9; c++) solution[r][c] = board[r][c];
-
-    // Убираем цифры для среднего уровня (около 45 пустых клеток)
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            sudokuSolution[r][c] = sudokuBoard[r][c];
+        }
+    }
+    
+    // Убираем ячейки (средний уровень: 40-50 пустых)
     let cellsToRemove = 45;
-    while(cellsToRemove > 0) {
+    let attempts = 0;
+    
+    while (cellsToRemove > 0 && attempts < 200) {
         let r = Math.floor(Math.random() * 9);
         let c = Math.floor(Math.random() * 9);
-        if(board[r][c] !== 0) {
-            board[r][c] = 0;
+        
+        if (sudokuBoard[r][c] !== 0) {
+            sudokuBoard[r][c] = 0;
             cellsToRemove--;
         }
+        attempts++;
     }
-
+    
     // Сохраняем начальное состояние
-    for(let r=0; r<9; r++) for(let c=0; c<9; c++) initialBoard[r][c] = board[r][c];
-}
-
-function fillDiagonal() {
-    for(let i=0; i<9; i+=3) fillBox(i, i);
-}
-
-function fillBox(rowStart, colStart) {
-    let num;
-    for(let i=0; i<3; i++) {
-        for(let j=0; j<3; j++) {
-            do { num = Math.floor(Math.random() * 9) + 1; } 
-            while(!isSafe(board, rowStart+i, colStart+j, num));
-            board[rowStart+i][colStart+j] = num;
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            sudokuInitial[r][c] = sudokuBoard[r][c];
         }
     }
 }
 
-function isSafe(grid, row, col, num) {
-    for(let x=0; x<9; x++) if(grid[row][x] === num || grid[x][col] === num) return false;
-    let startRow = row - row % 3, startCol = col - col % 3;
-    for(let i=0; i<3; i++) for(let j=0; j<3; j++) if(grid[i+startRow][j+startCol] === num) return false;
+function fillDiagonalBlocks() {
+    for (let i = 0; i < 9; i += 3) {
+        fillBlock(i, i);
+    }
+}
+
+function fillBlock(rowStart, colStart) {
+    let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    shuffleArray(nums);
+    
+    let idx = 0;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            sudokuBoard[rowStart + i][colStart + j] = nums[idx++];
+        }
+    }
+}
+
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+}
+
+function isSafeMove(grid, row, col, num) {
+    // Проверка строки
+    for (let x = 0; x < 9; x++) {
+        if (grid[row][x] === num) return false;
+    }
+    
+    // Проверка столбца
+    for (let x = 0; x < 9; x++) {
+        if (grid[x][col] === num) return false;
+    }
+    
+    // Проверка блока 3x3
+    let startRow = Math.floor(row / 3) * 3;
+    let startCol = Math.floor(col / 3) * 3;
+    
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (grid[startRow + i][startCol + j] === num) return false;
+        }
+    }
+    
     return true;
 }
 
-function solveSudoku(grid) {
-    let row = -1, col = -1, isEmpty = true;
-    for(let i=0; i<9; i++) {
-        for(let j=0; j<9; j++) {
-            if(grid[i][j] === 0) { row = i; col = j; isEmpty = false; break; }
+function solveSudokuBoard(grid) {
+    for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+            if (grid[row][col] === 0) {
+                for (let num = 1; num <= 9; num++) {
+                    if (isSafeMove(grid, row, col, num)) {
+                        grid[row][col] = num;
+                        
+                        if (solveSudokuBoard(grid)) {
+                            return true;
+                        }
+                        
+                        grid[row][col] = 0;
+                    }
+                }
+                return false;
+            }
         }
-        if(!isEmpty) break;
     }
-    if(isEmpty) return true;
-    for(let num=1; num<=9; num++) {
-        if(isSafe(grid, row, col, num)) {
-            grid[row][col] = num;
-            if(solveSudoku(grid)) return true;
-            grid[row][col] = 0;
-        }
-    }
-    return false;
+    return true;
 }
 
-// Отрисовка сетки
-function renderBoard() {
+// Отрисовка доски
+function renderSudokuBoard() {
     const boardEl = document.getElementById('sudoku-board');
     if (!boardEl) return;
+    
     boardEl.innerHTML = '';
-
-    for(let r=0; r<9; r++) {
-        for(let c=0; c<9; c++) {
+    
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
             let cell = document.createElement('div');
             cell.className = 'sudoku-cell';
             cell.dataset.r = r;
             cell.dataset.c = c;
             
-            let val = board[r][c];
-            if(initialBoard[r][c] !== 0) {
+            let val = sudokuBoard[r][c];
+            
+            if (sudokuInitial[r][c] !== 0) {
+                // Начальная цифра (неизменяемая)
                 cell.innerText = val;
                 cell.classList.add('given');
-            } else if(val !== 0) {
+            } else if (val !== 0) {
+                // Введенная пользователем цифра
                 cell.innerText = val;
-                if(val !== solution[r][c]) cell.classList.add('error'); // Красная цифра при ошибке
-            } else if(notes[r][c].length > 0) {
-                // Отрисовка заметок
+                
+                // Проверка на ошибку
+                if (val !== sudokuSolution[r][c]) {
+                    cell.classList.add('error');
+                }
+            } else if (sudokuNotes[r][c] && sudokuNotes[r][c].length > 0) {
+                // Заметки
                 let notesGrid = document.createElement('div');
                 notesGrid.className = 'sudoku-notes';
-                for(let i=1; i<=9; i++) {
-                    let n = document.createElement('div');
-                    n.className = 'note-num';
-                    if(notes[r][c].includes(i)) n.innerText = i;
-                    notesGrid.appendChild(n);
+                
+                for (let i = 1; i <= 9; i++) {
+                    let noteEl = document.createElement('div');
+                    noteEl.className = 'note-num';
+                    if (sudokuNotes[r][c].includes(i)) {
+                        noteEl.innerText = i;
+                    }
+                    notesGrid.appendChild(noteEl);
                 }
+                
                 cell.appendChild(notesGrid);
             }
-
-            cell.onclick = () => selectCell(r, c);
+            
+            cell.addEventListener('click', () => selectSudokuCell(r, c));
             boardEl.appendChild(cell);
         }
     }
-    highlightCells();
+    
+    highlightSudokuCells();
 }
 
-function selectCell(r, c) {
-    selectedCell = {r, c};
-    highlightCells();
+// Выбор ячейки
+function selectSudokuCell(r, c) {
+    sudokuSelected = { r, c };
+    highlightSudokuCells();
 }
 
-function highlightCells() {
-    document.querySelectorAll('.sudoku-cell').forEach(cell => {
+// Подсветка ячеек
+function highlightSudokuCells() {
+    const cells = document.querySelectorAll('.sudoku-cell');
+    
+    cells.forEach(cell => {
         cell.classList.remove('selected', 'highlighted', 'same-number');
+        
+        if (!sudokuSelected) return;
+        
         let r = parseInt(cell.dataset.r);
         let c = parseInt(cell.dataset.c);
+        let sr = sudokuSelected.r;
+        let sc = sudokuSelected.c;
         
-        if(!selectedCell) return;
-
-        // Выделение крестом и блоком
-        let sr = selectedCell.r, sc = selectedCell.c;
-        let selectedVal = board[sr][sc];
-
-        if(r === sr && c === sc) {
+        // Выбранная ячейка
+        if (r === sr && c === sc) {
             cell.classList.add('selected');
-        } else if (r === sr || c === sc || (Math.floor(r/3) === Math.floor(sr/3) && Math.floor(c/3) === Math.floor(sc/3))) {
+            return;
+        }
+        
+        // Подсветка строки, столбца и блока 3x3
+        let sameRow = r === sr;
+        let sameCol = c === sc;
+        let sameBlock = Math.floor(r / 3) === Math.floor(sr / 3) && 
+                        Math.floor(c / 3) === Math.floor(sc / 3);
+        
+        if (sameRow || sameCol || sameBlock) {
             cell.classList.add('highlighted');
         }
         
-        // Подсветка таких же цифр по всему полю
-        if(selectedVal !== 0 && board[r][c] === selectedVal && !(r===sr && c===sc)) {
+        // Подсветка одинаковых цифр
+        let selectedVal = sudokuBoard[sr][sc];
+        if (selectedVal !== 0 && sudokuBoard[r][c] === selectedVal) {
             cell.classList.add('same-number');
         }
     });
 }
 
+// Ввод цифры
 function sudokuInput(num) {
-    if(!selectedCell) return;
-    let r = selectedCell.r, c = selectedCell.c;
-    if(initialBoard[r][c] !== 0) return; // Нельзя менять изначальные цифры
-
-    saveHistory();
-
-    if(isNotesMode) {
-        let n = notes[r][c];
-        if(n.includes(num)) notes[r][c] = n.filter(x => x !== num);
-        else notes[r][c].push(num);
-        board[r][c] = 0; // Сбрасываем большую цифру, если пишем заметку
+    if (!sudokuSelected) return;
+    
+    let r = sudokuSelected.r;
+    let c = sudokuSelected.c;
+    
+    // Нельзя менять начальные цифры
+    if (sudokuInitial[r][c] !== 0) return;
+    
+    // Сохраняем историю
+    saveSudokuHistory();
+    
+    if (sudokuNotesMode) {
+        // Режим заметок
+        let notes = sudokuNotes[r][c];
+        
+        if (notes.includes(num)) {
+            sudokuNotes[r][c] = notes.filter(n => n !== num);
+        } else {
+            sudokuNotes[r][c].push(num);
+            sudokuNotes[r][c].sort();
+        }
+        
+        sudokuBoard[r][c] = 0;
     } else {
-        if(board[r][c] === num) board[r][c] = 0; // Повторное нажатие стирает
-        else board[r][c] = num;
-        notes[r][c] = []; // Очищаем заметки при вводе цифры
+        // Обычный ввод
+        if (sudokuBoard[r][c] === num) {
+            sudokuBoard[r][c] = 0;
+        } else {
+            sudokuBoard[r][c] = num;
+            sudokuNotes[r][c] = [];
+            
+            // Анимация ошибки
+            if (num !== sudokuSolution[r][c]) {
+                const cell = document.querySelector(`.sudoku-cell[data-r="${r}"][data-c="${c}"]`);
+                if (cell) {
+                    cell.classList.add('error-flash');
+                    setTimeout(() => cell.classList.remove('error-flash'), 300);
+                }
+            }
+            
+            // Удаляем эту цифру из заметок в связанных ячейках
+            if (num === sudokuSolution[r][c]) {
+                removeNoteFromRelated(r, c, num);
+            }
+        }
     }
-    renderBoard();
+    
+    renderSudokuBoard();
+    updateNumpadState();
+    checkSudokuWin();
 }
 
-function saveHistory() {
-    history.push({
-        board: JSON.parse(JSON.stringify(board)),
-        notes: JSON.parse(JSON.stringify(notes))
+// Удаление заметки из связанных ячеек при правильном вводе
+function removeNoteFromRelated(row, col, num) {
+    for (let i = 0; i < 9; i++) {
+        // Строка
+        sudokuNotes[row][i] = sudokuNotes[row][i].filter(n => n !== num);
+        // Столбец
+        sudokuNotes[i][col] = sudokuNotes[i][col].filter(n => n !== num);
+    }
+    
+    // Блок 3x3
+    let startRow = Math.floor(row / 3) * 3;
+    let startCol = Math.floor(col / 3) * 3;
+    
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            sudokuNotes[startRow + i][startCol + j] = 
+                sudokuNotes[startRow + i][startCol + j].filter(n => n !== num);
+        }
+    }
+}
+
+// Сохранение истории для отмены
+function saveSudokuHistory() {
+    sudokuHistory.push({
+        board: JSON.parse(JSON.stringify(sudokuBoard)),
+        notes: JSON.parse(JSON.stringify(sudokuNotes))
+    });
+    
+    // Ограничиваем историю
+    if (sudokuHistory.length > 50) {
+        sudokuHistory.shift();
+    }
+}
+
+// Обновление состояния цифровой панели
+function updateNumpadState() {
+    const numBtns = document.querySelectorAll('.num-btn');
+    
+    numBtns.forEach(btn => {
+        let num = parseInt(btn.dataset.num);
+        let count = 0;
+        
+        // Считаем сколько раз цифра уже использована правильно
+        for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+                if (sudokuBoard[r][c] === num && sudokuBoard[r][c] === sudokuSolution[r][c]) {
+                    count++;
+                }
+            }
+        }
+        
+        // Если цифра использована 9 раз — она завершена
+        if (count >= 9) {
+            btn.classList.add('completed');
+        } else {
+            btn.classList.remove('completed');
+        }
     });
 }
 
-// Обработчики кнопок
+// Проверка победы
+function checkSudokuWin() {
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            if (sudokuBoard[r][c] !== sudokuSolution[r][c]) {
+                return false;
+            }
+        }
+    }
+    
+    // Победа!
+    setTimeout(() => {
+        alert('Поздравляю! Судоку решено! 🎉');
+    }, 100);
+    
+    return true;
+}
+
+// Инициализация обработчиков
 document.addEventListener('DOMContentLoaded', () => {
-    // Вызываем при загрузке (если раздел рестов не скрыт)
-    // Но лучше вызывать при открытии раздела 'rests', это учтено ниже.
-
-    document.getElementById('btn-notes')?.addEventListener('click', function() {
-        isNotesMode = !isNotesMode;
-        this.classList.toggle('active');
-        document.getElementById('notes-status').innerText = isNotesMode ? "Notes ON" : "Notes OFF";
-    });
-
-    document.getElementById('btn-erase')?.addEventListener('click', () => {
-        if(!selectedCell || initialBoard[selectedCell.r][selectedCell.c] !== 0) return;
-        saveHistory();
-        board[selectedCell.r][selectedCell.c] = 0;
-        notes[selectedCell.r][selectedCell.c] = [];
-        renderBoard();
-    });
-
-    document.getElementById('btn-undo')?.addEventListener('click', () => {
-        if(history.length === 0) return;
-        let lastState = history.pop();
-        board = lastState.board;
-        notes = lastState.notes;
-        renderBoard();
-    });
-
-    document.getElementById('btn-hint')?.addEventListener('click', () => {
-        if(!selectedCell || initialBoard[selectedCell.r][selectedCell.c] !== 0 || board[selectedCell.r][selectedCell.c] === solution[selectedCell.r][selectedCell.c]) return;
-        saveHistory();
-        board[selectedCell.r][selectedCell.c] = solution[selectedCell.r][selectedCell.c];
-        notes[selectedCell.r][selectedCell.c] = [];
-        renderBoard();
+    // Кнопка Notes
+    const notesBtn = document.getElementById('btn-notes');
+    if (notesBtn) {
+        notesBtn.addEventListener('click', function() {
+            sudokuNotesMode = !sudokuNotesMode;
+            this.classList.toggle('active');
+            document.getElementById('notes-status').innerText = 
+                sudokuNotesMode ? "Notes ON" : "Notes OFF";
+        });
+    }
+    
+    // Кнопка Erase
+    const eraseBtn = document.getElementById('btn-erase');
+    if (eraseBtn) {
+        eraseBtn.addEventListener('click', () => {
+            if (!sudokuSelected) return;
+            if (sudokuInitial[sudokuSelected.r][sudokuSelected.c] !== 0) return;
+            
+            saveSudokuHistory();
+            sudokuBoard[sudokuSelected.r][sudokuSelected.c] = 0;
+            sudokuNotes[sudokuSelected.r][sudokuSelected.c] = [];
+            renderSudokuBoard();
+            updateNumpadState();
+        });
+    }
+    
+    // Кнопка Undo
+    const undoBtn = document.getElementById('btn-undo');
+    if (undoBtn) {
+        undoBtn.addEventListener('click', () => {
+            if (sudokuHistory.length === 0) return;
+            
+            let lastState = sudokuHistory.pop();
+            sudokuBoard = lastState.board;
+            sudokuNotes = lastState.notes;
+            renderSudokuBoard();
+            updateNumpadState();
+        });
+    }
+    
+    // Кнопка Hint
+    const hintBtn = document.getElementById('btn-hint');
+    if (hintBtn) {
+        hintBtn.addEventListener('click', () => {
+            if (!sudokuSelected) return;
+            
+            let r = sudokuSelected.r;
+            let c = sudokuSelected.c;
+            
+            if (sudokuInitial[r][c] !== 0) return;
+            if (sudokuBoard[r][c] === sudokuSolution[r][c]) return;
+            
+            saveSudokuHistory();
+            sudokuBoard[r][c] = sudokuSolution[r][c];
+            sudokuNotes[r][c] = [];
+            removeNoteFromRelated(r, c, sudokuSolution[r][c]);
+            renderSudokuBoard();
+            updateNumpadState();
+            checkSudokuWin();
+        });
+    }
+    
+    // Кнопка новой игры
+    const newGameBtn = document.getElementById('btn-new-game');
+    if (newGameBtn) {
+        newGameBtn.addEventListener('click', initSudoku);
+    }
+    
+    // Цифровая панель
+    const numBtns = document.querySelectorAll('.num-btn');
+    numBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            let num = parseInt(btn.dataset.num);
+            sudokuInput(num);
+        });
     });
 });
 
-// МОДЕРНИЗАЦИЯ openSection: генерируем судоку при первом заходе в раздел
-const originalOpenSection = window.openSection;
+// Модификация openSection для инициализации судоку
+const originalOpenSectionFunc = window.openSection;
 window.openSection = function(sectionId) {
-    if(typeof originalOpenSection === 'function') originalOpenSection(sectionId);
-    
-    if(sectionId === 'rests' && board.length === 0) {
-        initSudoku();
+    if (typeof originalOpenSectionFunc === 'function') {
+        originalOpenSectionFunc(sectionId);
     }
-}
+    
+    if (sectionId === 'rests' && !sudokuInitialized) {
+        setTimeout(() => {
+            initSudoku();
+        }, 100);
+    }
+};
