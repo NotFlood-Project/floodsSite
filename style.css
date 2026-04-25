@@ -578,7 +578,8 @@ input[type=range]::-webkit-slider-thumb {
    СУДОКУ — ПОЛНЫЙ СТИЛЬ
    ========================================= */
 .sudoku-wrapper {
-    width: 100%; /* Вот главное спасение */
+    width: 100%;
+    min-width: 320px; /* Жестко запрещаем сжиматься меньше размера телефона */
     max-width: 400px;
     margin: 0 auto;
     display: flex;
@@ -619,8 +620,9 @@ input[type=range]::-webkit-slider-thumb {
     position: relative;
     transition: background-color 0.15s ease;
     border: 1px solid #333;
+    min-width: 30px; /* <--- ДОБАВЬ ЭТО */
+    min-height: 30px; /* <--- И ЭТО */
 }
-
 /* Жирные границы для блоков 3x3 */
 .sudoku-cell[data-c="2"],
 .sudoku-cell[data-c="5"] {
