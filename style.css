@@ -566,4 +566,121 @@ input[type=range]::-webkit-slider-thumb {
     .gallery-grid { grid-template-columns: 1fr; }
 
     .chat-container iframe { height: 500px !important; }
+
+
+
+
+
+
+
+
+    /* =========================================
+   СУДОКУ
+   ========================================= */
+.sudoku-wrapper {
+    max-width: 450px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    user-select: none;
+}
+
+#sudoku-board {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    background-color: #555;
+    border: 3px solid #888;
+    gap: 1px;
+}
+
+.sudoku-cell {
+    aspect-ratio: 1;
+    background-color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
+    color: #ddd;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+/* Жирные линии для блоков 3x3 */
+.sudoku-cell:nth-child(3n) { border-right: 2px solid #888; }
+.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid #888; }
+.sudoku-cell:nth-child(9n) { border-right: none; } /* Убираем крайнюю правую */
+
+/* Цвета состояний */
+.sudoku-cell.given { color: #fff; font-weight: bold; }
+.sudoku-cell.selected { background-color: #4a2c4a !important; } /* Фиолетовый акцент (выбранная) */
+.sudoku-cell.highlighted { background-color: #2a1f2a; } /* Подсветка строки/столбца */
+.sudoku-cell.same-number { background-color: #3b283b; } /* Подсветка таких же цифр */
+.sudoku-cell.error { color: #ff3333; } /* Ошибка (красный) */
+
+/* Заметки (Notes) */
+.sudoku-notes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 100%;
+    height: 100%;
+    font-size: clamp(0.5rem, 2vw, 0.7rem);
+    color: #888;
+}
+.note-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Кнопки управления и цифры */
+.sudoku-controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+.s-ctrl-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid #444;
+    color: #aaa;
+    padding: 10px 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+.s-ctrl-btn span { font-size: 0.8rem; display: block; margin-top: 5px; }
+.s-ctrl-btn.active { color: #fff; border-color: #888; background: #333; }
+
+.sudoku-numpad {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 5px;
+}
+.num-btn {
+    background: #222;
+    border: 1px solid #444;
+    color: #fff;
+    font-size: 1.5rem;
+    padding: 10px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Old Standard TT', serif;
+}
+.num-btn:active { background: #555; }
+
+#btn-new-game {
+    background: #4a2c4a;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-family: 'Old Standard TT', serif;
+    margin-top: 10px;
+}
 }

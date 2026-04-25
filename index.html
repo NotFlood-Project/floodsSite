@@ -466,14 +466,35 @@
 
 
 
-        <section id="rests" class="page-section">
-            <h2>Ресты:</h2>
-            <img src="assets/iBite.gif" class="gif-small" alt="Разделитель" style="display: block; margin: 0 auto;">
+ <section id="rests" class="page-section">
+            <h2>Судоку</h2>
+            <p style="text-align: center; margin-bottom: 20px;">Отдыхаешь? Разомни мозги. Ошибки не прощаются.</p>
             
-            <ul class="rest-list">
-                <li><strong>А вот и не скажу...</strong></li>
-            </ul>
+            <div class="sudoku-wrapper">
+                <div id="sudoku-board"></div>
+                
+                <div class="sudoku-controls">
+                    <button class="s-ctrl-btn" id="btn-undo">↺<br><span>Undo</span></button>
+                    <button class="s-ctrl-btn" id="btn-erase">⌫<br><span>Erase</span></button>
+                    <button class="s-ctrl-btn" id="btn-notes">✎<br><span id="notes-status">Notes OFF</span></button>
+                    <button class="s-ctrl-btn" id="btn-hint">💡<br><span>Hint</span></button>
+                </div>
 
+                <div class="sudoku-numpad">
+                    <button class="num-btn" onclick="sudokuInput(1)">1</button>
+                    <button class="num-btn" onclick="sudokuInput(2)">2</button>
+                    <button class="num-btn" onclick="sudokuInput(3)">3</button>
+                    <button class="num-btn" onclick="sudokuInput(4)">4</button>
+                    <button class="num-btn" onclick="sudokuInput(5)">5</button>
+                    <button class="num-btn" onclick="sudokuInput(6)">6</button>
+                    <button class="num-btn" onclick="sudokuInput(7)">7</button>
+                    <button class="num-btn" onclick="sudokuInput(8)">8</button>
+                    <button class="num-btn" onclick="sudokuInput(9)">9</button>
+                </div>
+                
+                <button id="btn-new-game" onclick="initSudoku()">Начать новую игру</button>
+            </div>
+            <img src="assets/iBite.gif" class="gif-small" alt="Разделитель" style="display: block; margin: 20px auto;">
         </section>
         
 
