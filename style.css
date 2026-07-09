@@ -23,7 +23,7 @@ body {
     color: #e0e0e0;
     
     /*фон*/
-    background-color: #050505; 
+    /* background-color: #050505; */
     background-image: url('assets/bg3.jpg'); 
     background-repeat: no-repeat;
     background-position: center center;
